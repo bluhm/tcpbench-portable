@@ -1,4 +1,4 @@
-/*	$OpenBSD: tcpbench.c,v 1.62 2020/05/02 22:00:29 procter Exp $	*/
+/*	$OpenBSD: tcpbench.c,v 1.63 2020/05/04 12:13:09 sthen Exp $	*/
 
 /*
  * Copyright (c) 2008 Damien Miller <djm@mindrot.org>
@@ -241,6 +241,10 @@ signal_handler(int sig, short event, void *bula)
 	 * signal handler rules don't apply, libevent decouples for us
 	 */
 	switch (sig) {
+	case SIGINFO:
+		printf("\n");
+		wrapup(-1);
+		break;
 	case SIGINT:
 		printf("\n");
 		wrapup(0);
@@ -1167,7 +1171,8 @@ wrapup(int err)
 		summary_display();
 	}
 
-	exit(err);
+	if (err != -1)
+		exit(err);
 }
 
 int
@@ -1189,7 +1194,7 @@ main(int argc, char **argv)
 	struct nlist nl[] = { { "_tcbtable" }, { "" } };
 #endif
 	const char *host = NULL, *port = DEFAULT_PORT, *srcbind = NULL;
-	struct event ev_sigint, ev_sigterm, ev_sighup, ev_progtimer;
+	struct event ev_sigint, ev_sigterm, ev_sighup, ev_siginfo, ev_progtimer;
 	struct sockaddr_un sock_un;
 
 	/* Init world */
@@ -1452,9 +1457,11 @@ main(int argc, char **argv)
 	signal_set(&ev_sigterm, SIGTERM, signal_handler, NULL);
 	signal_set(&ev_sighup, SIGHUP, signal_handler, NULL);
 	signal_set(&ev_sigint, SIGINT, signal_handler, NULL);
+	signal_set(&ev_siginfo, SIGINFO, signal_handler, NULL);
 	signal_add(&ev_sigint, NULL);
 	signal_add(&ev_sigterm, NULL);
 	signal_add(&ev_sighup, NULL);
+	signal_add(&ev_siginfo, NULL);
 	signal(SIGPIPE, SIG_IGN);
 
 	if (UDP_MODE) {
