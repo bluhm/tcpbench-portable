@@ -1,4 +1,4 @@
-/*	$OpenBSD: tcpbench.c,v 1.63 2020/05/04 12:13:09 sthen Exp $	*/
+/*	$OpenBSD: tcpbench.c,v 1.64 2021/02/04 18:46:25 bluhm Exp $	*/
 
 /*
  * Copyright (c) 2008 Damien Miller <djm@mindrot.org>
@@ -76,6 +76,7 @@
 
 /* Our tcpbench globals */
 struct {
+	int	  Dflag;	/* Socket debug */
 	int	  Sflag;	/* Socket buffer size */
 	u_int	  rflag;	/* Report rate (ms) */
 	int	  sflag;	/* True if server */
@@ -226,10 +227,10 @@ usage(void)
 #ifdef __OpenBSD__
 	    "usage: tcpbench -l\n"
 #endif
-	    "       tcpbench [-46RUuv] [-B buf] [-b sourceaddr] [-k kvars] [-n connections]\n"
+	    "       tcpbench [-46DRUuv] [-B buf] [-b sourceaddr] [-k kvars] [-n connections]\n"
 	    "                [-p port] [-r interval] [-S space] [-T toskeyword]\n"
 	    "                [-t secs] [-V rtable] hostname\n"
-	    "       tcpbench -s [-46Uuv] [-B buf] [-k kvars] [-p port] [-r interval]\n"
+	    "       tcpbench -s [-46DUuv] [-B buf] [-k kvars] [-p port] [-r interval]\n"
 	    "                [-S space] [-T toskeyword] [-V rtable] [hostname]\n");
 	exit(1);
 }
@@ -915,6 +916,11 @@ server_init(struct addrinfo *aitop)
 				warn("socket");
 			continue;
 		}
+		if (ptb->Dflag) {
+			if (setsockopt(sock, SOL_SOCKET, SO_DEBUG,
+			    &ptb->Dflag, sizeof(ptb->Dflag)))
+				err(1, "setsockopt SO_DEBUG");
+		}
 		if (ptb->Tflag != -1 && ai->ai_family == AF_INET) {
 			if (setsockopt(sock, IPPROTO_IP, IP_TOS,
 			    &ptb->Tflag, sizeof(ptb->Tflag)))
@@ -1027,6 +1033,11 @@ client_init(struct addrinfo *aitop, int nconn, struct addrinfo *aib)
 				if (ptb->vflag)
 					warn("socket");
 				continue;
+			}
+			if (ptb->Dflag) {
+				if (setsockopt(sock, SOL_SOCKET, SO_DEBUG,
+				    &ptb->Dflag, sizeof(ptb->Dflag)))
+					err(1, "setsockopt SO_DEBUG");
 			}
 			if (aib != NULL) {
 				saddr_ntop(aib->ai_addr, aib->ai_addrlen,
@@ -1207,6 +1218,7 @@ main(int argc, char **argv)
 	setvbuf(stdout, NULL, _IOLBF, 0);
 	ptb = &tcpbench;
 	ptb->dummybuf_len = 0;
+	ptb->Dflag = 0;
 	ptb->Sflag = ptb->sflag = ptb->vflag = ptb->Rflag = ptb->Uflag = 0;
 #ifdef __OpenBSD__
 	ptb->kvmh  = NULL;
@@ -1218,7 +1230,8 @@ main(int argc, char **argv)
 	aib = NULL;
 	secs = 0;
 
-	while ((ch = getopt(argc, argv, "46b:B:hlk:n:p:Rr:sS:t:T:uUvV:")) != -1) {
+	while ((ch = getopt(argc, argv, "46b:B:Dhlk:n:p:Rr:sS:t:T:uUvV:"))
+	    != -1) {
 		switch (ch) {
 		case '4':
 			family = PF_INET;
@@ -1228,6 +1241,9 @@ main(int argc, char **argv)
 			break;
 		case 'b':
 			srcbind = optarg;
+			break;
+		case 'D':
+			ptb->Dflag = 1;
 			break;
 #ifdef __OpenBSD__
 		case 'l':
