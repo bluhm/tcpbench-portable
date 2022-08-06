@@ -503,10 +503,10 @@ check_prepare_kvars(char *list)
 static void
 stats_prepare(struct statctx *sc)
 {
-#ifdef __openbsd__
 	sc->buf = ptb->dummybuf;
 	sc->buflen = ptb->dummybuf_len;
 
+#ifdef __openbsd__
 	if (ptb->kvars)
 		sc->tcp_tcbaddr = kfind_tcb(sc->fd);
 #endif
