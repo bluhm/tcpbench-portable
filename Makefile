@@ -1,7 +1,7 @@
 PROG=		tcpbench
 WARNINGS=	yes
-LDADD=		-levent
-DPADD=		${LIBEVENT}
+LDADD=		-levent -lkvm
+DPADD=		${LIBEVENT} ${LIBKVM}
 BINDIR?=	/usr/local/bin
 MANDIR?=        /usr/local/man/man
 

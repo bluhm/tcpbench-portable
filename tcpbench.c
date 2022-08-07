@@ -30,7 +30,7 @@
 #include <netinet/in.h>
 #include <netinet/ip.h>
 #include <netinet/tcp.h>
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 #include <netinet/tcp_timer.h>
 #include <netinet/tcp_fsm.h>
 #include <netinet/in_pcb.h>
@@ -54,7 +54,7 @@
 #include <poll.h>
 #include <paths.h>
 
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 #include <kvm.h>
 #include <nlist.h>
 #endif
@@ -77,7 +77,7 @@ struct {
 	int	  uflag;	/* UDP mode */
 	int	  Uflag;	/* UNIX (AF_LOCAL) mode */
 	int	  Rflag;	/* randomize client write size */
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 	kvm_t	 *kvmh;		/* Kvm handler */
 	char	**kvars;	/* Kvm enabled vars */
 	u_long	  ktcbtab;	/* Ktcb */
@@ -110,12 +110,12 @@ struct statctx {
 
 static void	signal_handler(int, short, void *);
 static void	saddr_ntop(const struct sockaddr *, socklen_t, char *, size_t);
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 static void	drop_gid(void);
 #endif
 static void	set_slice_timer(int);
 static void	print_tcp_header(void);
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 static void	kget(u_long, void *, size_t);
 static u_long	kfind_tcb(int);
 static void	kupdate_stats(u_long, struct inpcb *, struct tcpcb *,
@@ -125,7 +125,7 @@ static void	check_kvar(const char *);
 static char **	check_prepare_kvars(char *);
 #endif
 static void	stats_prepare(struct statctx *);
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 static void	tcp_stats_display(unsigned long long, long double, float,
     struct statctx *, struct inpcb *, struct tcpcb *, struct socket *);
 #else
@@ -142,7 +142,7 @@ static void	client_init(struct addrinfo *, int, struct statctx *,
 static int	clock_gettime_tv(clockid_t, struct timeval *);
 static void	udp_server_handle_sc(int, short, void *);
 static void	udp_process_slice(int, short, void *);
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 static int	map_tos(char *, int *);
 #endif
 /*
@@ -159,7 +159,7 @@ static struct {
 	struct event timer;		/* process timer */
 } mainstats;
 
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 /* When adding variables, also add to tcp_stats_display() */
 static const char *allowed_kvars[] = {
 	"inpcb.inp_flags",
@@ -204,7 +204,7 @@ static void
 usage(void)
 {
 	fprintf(stderr,
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 	    "usage: tcpbench -l\n"
 #endif
 	    "       tcpbench [-46RUuv] [-B buf] [-b addr] [-k kvars] [-n connections]\n"
@@ -255,7 +255,7 @@ saddr_ntop(const struct sockaddr *addr, socklen_t alen, char *buf, size_t len)
 	snprintf(buf, len, "[%s]:%s", hbuf, pbuf);
 }
 
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 static void
 drop_gid(void)
 {
@@ -310,14 +310,14 @@ print_tcp_header(void)
 
 	printf("%12s %14s %12s %8s ", "elapsed_ms", "bytes", "mbps",
 	    "bwidth");
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 	for (kv = ptb->kvars;  ptb->kvars != NULL && *kv != NULL; kv++)
 		printf("%s%s", kv != ptb->kvars ? "," : "", *kv);
 #endif
 	printf("\n");
 }
 
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 static void
 kget(u_long addr, void *buf, size_t size)
 {
@@ -502,7 +502,7 @@ stats_prepare(struct statctx *sc)
 	sc->buf = ptb->dummybuf;
 	sc->buflen = ptb->dummybuf_len;
 
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 	if (ptb->kvars)
 		sc->tcp_tcbaddr = kfind_tcb(sc->fd);
 #endif
@@ -512,7 +512,7 @@ stats_prepare(struct statctx *sc)
 
 }
 
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 static void
 tcp_stats_display(unsigned long long total_elapsed, long double mbps,
     float bwperc, struct statctx *sc, struct inpcb *inpcb,
@@ -528,7 +528,7 @@ tcp_stats_display(unsigned long long total_elapsed, long double mbps,
 	printf("%12llu %14llu %12.3Lf %7.2f%% ", total_elapsed, sc->bytes,
 	    mbps, bwperc);
 
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 	if (ptb->kvars != NULL) {
 		kupdate_stats(sc->tcp_tcbaddr, inpcb, tcpcb,
 		    sockb);
@@ -588,7 +588,7 @@ tcp_process_slice(int fd, short event, void *bula)
 	float bwperc;
 	struct statctx *sc;
 	struct timeval t_cur, t_diff;
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 	struct inpcb inpcb;
 	struct tcpcb tcpcb;
 	struct socket sockb;
@@ -597,7 +597,7 @@ tcp_process_slice(int fd, short event, void *bula)
 	TAILQ_FOREACH(sc, &sc_queue, entry) {
 		if (clock_gettime_tv(CLOCK_MONOTONIC, &t_cur) == -1)
 			err(1, "clock_gettime_tv");
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 		if (ptb->kvars != NULL) /* process kernel stats */
 			kupdate_stats(sc->tcp_tcbaddr, &inpcb, &tcpcb,
 			    &sockb);
@@ -611,7 +611,7 @@ tcp_process_slice(int fd, short event, void *bula)
 		mbps = (sc->bytes * 8) / (since_last * 1000.0);
 		slice_mbps += mbps;
 
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 		tcp_stats_display(total_elapsed, mbps, bwperc, sc,
 		    &inpcb, &tcpcb, &sockb);
 #else
@@ -989,7 +989,7 @@ client_init(struct addrinfo *aitop, int nconn, struct statctx *udp_sc,
 		    mainstats.nconns);
 }
 
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 static int
 map_tos(char *s, int *val)
 {
@@ -1051,7 +1051,7 @@ main(int argc, char **argv)
 	struct timeval tv;
 	unsigned int secs, rtable;
 
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 	char kerr[_POSIX2_LINE_MAX], *tmp;
 #endif
 	struct addrinfo *aitop, *aib, hints;
@@ -1059,7 +1059,7 @@ main(int argc, char **argv)
 	struct rlimit rl;
 	int ch, herr, nconn;
 	int family = PF_UNSPEC;
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 	struct nlist nl[] = { { "_tcbtable" }, { "" } };
 #endif
 	const char *host = NULL, *port = DEFAULT_PORT, *srcbind = NULL;
@@ -1072,7 +1072,7 @@ main(int argc, char **argv)
 	ptb = &tcpbench;
 	ptb->dummybuf_len = 0;
 	ptb->Sflag = ptb->sflag = ptb->vflag = ptb->Rflag = ptb->Uflag = 0;
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 	ptb->kvmh  = NULL;
 	ptb->kvars = NULL;
 #endif
@@ -1093,7 +1093,7 @@ main(int argc, char **argv)
 		case 'b':
 			srcbind = optarg;
 			break;
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 		case 'l':
 			list_kvars();
 			exit(0);
@@ -1137,7 +1137,7 @@ main(int argc, char **argv)
 		case 'v':
 			ptb->vflag++;
 			break;
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 		case 'V':
 			rtable = (unsigned int)strtonum(optarg, 0,
 			    RT_TABLEID_MAX, &errstr);
@@ -1160,7 +1160,7 @@ main(int argc, char **argv)
 		case 'U':
 			ptb->Uflag = 1;
 			break;
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 		case 'T':
 			if (map_tos(optarg, &ptb->Tflag))
 				break;
@@ -1187,14 +1187,14 @@ main(int argc, char **argv)
 		}
 	}
 
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 	if (pledge("stdio unveil rpath dns inet unix id proc", NULL) == -1)
 		err(1, "pledge");
 #endif
 
 	argv += optind;
 	argc -= optind;
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 	if ((argc != (ptb->sflag && !ptb->Uflag ? 0 : 1)) ||
 	    (UDP_MODE && (ptb->kvars || nconn != 1)))
 #else
@@ -1203,7 +1203,7 @@ main(int argc, char **argv)
 #endif
 		usage();
 
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 	if (ptb->kvars) {
 		if (unveil(_PATH_MEM, "r") == -1)
 			err(1, "unveil");
@@ -1223,14 +1223,14 @@ main(int argc, char **argv)
 		drop_gid();
 #endif
 
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 	if (!ptb->sflag || ptb->Uflag)
 #else
 	if (!ptb->sflag)
 #endif
 		host = argv[0];
 
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 	if (ptb->Uflag)
 		if (unveil(host, "rwc") == -1)
 			err(1, "unveil");
@@ -1294,7 +1294,7 @@ main(int argc, char **argv)
 		}
 	}
 
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 	if (pledge("stdio id inet unix", NULL) == -1)
 		err(1, "pledge");
 #endif
@@ -1308,7 +1308,7 @@ main(int argc, char **argv)
 	if (getrlimit(RLIMIT_NOFILE, &rl) == -1)
 		err(1, "getrlimit");
 
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 	if (pledge("stdio inet unix", NULL) == -1)
 		err(1, "pledge");
 #endif
@@ -1351,7 +1351,7 @@ main(int argc, char **argv)
 		}
 		client_init(aitop, nconn, udp_sc, aib);
 
-#ifdef __openbsd__
+#ifdef __OpenBSD__
 		if (pledge("stdio", NULL) == -1)
 			err(1, "pledge");
 #endif

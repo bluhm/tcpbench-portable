@@ -1,4 +1,4 @@
 Port OpenBSD tcpbench to GNU/Linux and possibly other systems.  Keep
 the differences to upstram small.  Use libbsd to provide features
-missing in GNU glibc.  Use #ifdef __openbsd__ to disable things
+missing in GNU glibc.  Use #ifdef __OpenBSD__ to disable things
 that cannot be easily done with Linux kernel.
