@@ -303,7 +303,9 @@ clock_gettime_tv(clockid_t clock_id, struct timeval *tv)
 static void
 print_tcp_header(void)
 {
+#ifdef __OpenBSD__
 	char **kv;
+#endif
 
 	if (ptb->rflag == 0)
 		return;
@@ -523,7 +525,9 @@ tcp_stats_display(unsigned long long total_elapsed, long double mbps,
     float bwperc, struct statctx *sc)
 #endif
 {
+#ifdef __OpenBSD__
 	int j;
+#endif
 
 	printf("%12llu %14llu %12.3Lf %7.2f%% ", total_elapsed, sc->bytes,
 	    mbps, bwperc);
@@ -1049,10 +1053,11 @@ int
 main(int argc, char **argv)
 {
 	struct timeval tv;
-	unsigned int secs, rtable;
-
 #ifdef __OpenBSD__
+	unsigned int secs, rtable;
 	char kerr[_POSIX2_LINE_MAX], *tmp;
+#else
+	unsigned int secs;
 #endif
 	struct addrinfo *aitop, *aib, hints;
 	const char *errstr;
