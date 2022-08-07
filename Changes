@@ -1,0 +1,4 @@
+Revision history for port from OpenBSD tcpbench to GNU/Linux.
+
+1.00
+    - Initial public release based on OpenBSD tcpbench.c 1.59.
