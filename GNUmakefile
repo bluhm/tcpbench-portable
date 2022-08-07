@@ -2,7 +2,9 @@ CFLAGS=		-D_DEFAULT_SOURCE -D_GNU_SOURCE \
 		-DLIBBSD_OVERLAY -isystem /usr/include/bsd \
 		-isystem /usr/local/include/bsd \
 		-Wall
-LDFLAGS=	-lbsd -levent
+# on Debian libbsd-dev and libev-libevent-dev habe to be installed
+# if an old libevent 1.4 exists on the system, use -lbsd -levent
+LDFLAGS=	-lbsd -lev
 BINDIR?=        /usr/local/bin
 MANDIR?=        /usr/local/man/man
 
