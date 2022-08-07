@@ -54,10 +54,6 @@
 #include <poll.h>
 #include <paths.h>
 
-#ifndef __openbsd__
-#include <bsd/bsd.h>
-#endif
-
 #ifdef __openbsd__
 #include <kvm.h>
 #include <nlist.h>
