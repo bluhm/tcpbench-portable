@@ -5,7 +5,7 @@ DPADD=		${LIBEVENT} ${LIBKVM}
 BINDIR?=	/usr/local/bin
 MANDIR?=        /usr/local/man/man
 
-VERSION=	1.00
+VERSION=	1.01
 CLEANFILES=	tcpbench-${VERSION}.tar.gz
 
 .PHONY: dist tcpbench-${VERSION}.tar.gz
