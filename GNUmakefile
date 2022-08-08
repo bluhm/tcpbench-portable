@@ -16,8 +16,8 @@ clean:
 	rm -f tcpbench tcpbench.o out
 
 install:
-	install -c -m 555 -s tcpbench ${DESTDIR}${BINDIR}
-	install -c -m 444 tcpbench.1 ${DESTDIR}${MANDIR}1
+	install -c -m 555 -s tcpbench -D -t ${DESTDIR}${BINDIR}
+	install -c -m 444 tcpbench.1 -D -t ${DESTDIR}${MANDIR}1
 
 .PHONY: test test-localhost test-localhost6
 test: test-localhost test-localhost6
