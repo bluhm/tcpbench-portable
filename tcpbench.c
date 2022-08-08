@@ -45,7 +45,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+#ifdef __OpenBSD__
 #include <event.h>
+#else
+#include <event2/event_struct.h>
+#include <event2/event.h>
+#include <event2/event_compat.h>
+#endif
 #include <netdb.h>
 #include <signal.h>
 #include <time.h>
