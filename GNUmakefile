@@ -2,14 +2,15 @@ CFLAGS=		-D_DEFAULT_SOURCE -D_GNU_SOURCE \
 		-DLIBBSD_OVERLAY -isystem /usr/include/bsd \
 		-isystem /usr/local/include/bsd \
 		-Wall
-# On Debian libbsd-dev and libev-libevent-dev have to be installed.
-# If an old libevent 1.4 exists on the system, use -lbsd -levent.
-LDFLAGS=	-lbsd -lev
+LDFLAGS=	-lbsd -levent
 BINDIR?=        /usr/local/bin
 MANDIR?=        /usr/local/man/man
 
 .PHONY: all clean install
 all:	tcpbench
+
+tcpbench: tcpbench.c
+	$(CC) $(CFLAGS) $< $(LDFLAGS) -o $@
 
 clean:
 	rm -f tcpbench tcpbench.o out
