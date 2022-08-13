@@ -1,0 +1,24 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Install packages
+      run: sudo apt-get -y install libbsd-dev libevent-dev
+    - name: Checkout sources
+      uses: actions/checkout@v3
+    - name: Make build
+      run: make
+    - name: Make test
+      run: make test
+    - name: Make install
+      run: sudo make install
