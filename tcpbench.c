@@ -241,10 +241,12 @@ signal_handler(int sig, short event, void *bula)
 	 * signal handler rules don't apply, libevent decouples for us
 	 */
 	switch (sig) {
+#ifdef __OpenBSD__
 	case SIGINFO:
 		printf("\n");
 		wrapup(-1);
 		break;
+#endif
 	case SIGINT:
 		printf("\n");
 		wrapup(0);
@@ -1194,7 +1196,11 @@ main(int argc, char **argv)
 	struct nlist nl[] = { { "_tcbtable" }, { "" } };
 #endif
 	const char *host = NULL, *port = DEFAULT_PORT, *srcbind = NULL;
+#ifdef __OpenBSD__
 	struct event ev_sigint, ev_sigterm, ev_sighup, ev_siginfo, ev_progtimer;
+#else
+	struct event ev_sigint, ev_sigterm, ev_sighup, ev_progtimer;
+#endif
 	struct sockaddr_un sock_un;
 
 	/* Init world */
@@ -1457,11 +1463,15 @@ main(int argc, char **argv)
 	signal_set(&ev_sigterm, SIGTERM, signal_handler, NULL);
 	signal_set(&ev_sighup, SIGHUP, signal_handler, NULL);
 	signal_set(&ev_sigint, SIGINT, signal_handler, NULL);
+#ifdef __OpenBSD__
 	signal_set(&ev_siginfo, SIGINFO, signal_handler, NULL);
+#endif
 	signal_add(&ev_sigint, NULL);
 	signal_add(&ev_sigterm, NULL);
 	signal_add(&ev_sighup, NULL);
+#ifdef __OpenBSD__
 	signal_add(&ev_siginfo, NULL);
+#endif
 	signal(SIGPIPE, SIG_IGN);
 
 	if (UDP_MODE) {
