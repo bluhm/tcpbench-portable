@@ -23,7 +23,7 @@ install:
 test: test-localhost test-localhost6
 
 test-localhost:
-	@echo '\n==== $@ ===='
+	@echo -e '\n==== $@ ===='
 	./tcpbench -s -4 >out & \
 	    trap "kill -TERM $$!" EXIT; \
 	    sleep 1; \
@@ -32,7 +32,7 @@ test-localhost:
 	grep '^Conn:' out
 
 test-localhost6:
-	@echo '\n==== $@ ===='
+	@echo -e '\n==== $@ ===='
 	./tcpbench -s -6 >out & \
 	    trap "kill -TERM $$!" EXIT; \
 	    sleep 1; \
