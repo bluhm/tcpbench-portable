@@ -54,7 +54,6 @@
 #endif
 #include <netdb.h>
 #include <signal.h>
-#include <time.h>
 #include <err.h>
 #include <fcntl.h>
 #include <poll.h>
