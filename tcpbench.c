@@ -1,4 +1,4 @@
-/*	$OpenBSD: tcpbench.c,v 1.67 2022/08/15 09:06:54 claudio Exp $	*/
+/*	$OpenBSD: tcpbench.c,v 1.68 2023/05/22 12:37:00 bluhm Exp $	*/
 
 /*
  * Copyright (c) 2008 Damien Miller <djm@mindrot.org>
@@ -202,8 +202,6 @@ static const char *allowed_kvars[] = {
 	"snd_wl1",
 	"snd_wl2",
 	"snd_wnd",
-	"snd_wnd",
-	"snd_wscale",
 	"snd_wscale",
 	"snd_zerowin",
 	"so_rcv_sb_cc",
