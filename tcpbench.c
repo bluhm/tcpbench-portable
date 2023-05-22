@@ -1185,20 +1185,11 @@ main(int argc, char **argv)
 
 	argv += optind;
 	argc -= optind;
-#ifdef __OpenBSD__
 	if ((argc != (ptb->sflag && !ptb->Uflag ? 0 : 1)) ||
 	    (UDP_MODE && (ptb->kvars || nconn != 1)))
-#else
-	if ((argc != (ptb->sflag ? 0 : 1)) ||
-	    (UDP_MODE && (nconn != 1)))
-#endif
 		usage();
 
-#ifdef __OpenBSD__
 	if (!ptb->sflag || ptb->Uflag)
-#else
-	if (!ptb->sflag)
-#endif
 		mainstats.host = host = argv[0];
 
 #ifdef __OpenBSD__
