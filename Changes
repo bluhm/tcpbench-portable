@@ -3,15 +3,14 @@ Revision history for port from OpenBSD tcpbench to GNU/Linux.
 2.01
 
 2.00 2023-05-22
-    - Remove many #ifdef OpenBSD as kvm PCB table was replaced with
-      getsockopt(TCP_INFO) which also exists on Linux.
-    - Update to OpenBSD tcpbench.c revision 1.69.
-    - Respect environment CFLAGS, CPPFLAGS and LDFLAGS in GNU
-      makefile.
+  * Remove many #ifdef OpenBSD as kvm PCB table was replaced with
+    getsockopt(TCP_INFO) which also exists on Linux.
+  * Update to OpenBSD tcpbench.c revision 1.69.
+  * Respect environment CFLAGS, CPPFLAGS and LDFLAGS in GNU makefile.
 
 1.01 2022-08-08
-    - Link with libevent2 instead of libev on GNU/Linux.
-    - Fix build on Ubuntu.
+  * Link with libevent2 instead of libev on GNU/Linux.
+  * Fix build on Ubuntu.
 
 1.00 2022-08-07
-    - Initial public release based on OpenBSD tcpbench.c 1.59.
+  * Initial public release based on OpenBSD tcpbench.c 1.59.
