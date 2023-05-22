@@ -1,8 +1,8 @@
-CFLAGS=		-D_DEFAULT_SOURCE -D_GNU_SOURCE \
+CFLAGS+=	-D_DEFAULT_SOURCE -D_GNU_SOURCE \
 		-DLIBBSD_OVERLAY -isystem /usr/include/bsd \
 		-isystem /usr/local/include/bsd \
 		-Wall
-LDFLAGS=	-lbsd -levent
+LDFLAGS+=	-lbsd -levent
 BINDIR?=        /usr/local/bin
 MANDIR?=        /usr/local/man/man
 
@@ -10,7 +10,7 @@ MANDIR?=        /usr/local/man/man
 all:	tcpbench
 
 tcpbench: tcpbench.c
-	$(CC) $(CFLAGS) $< $(LDFLAGS) -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) $< $(LDFLAGS) -o $@
 
 clean:
 	rm -f tcpbench tcpbench.o out
