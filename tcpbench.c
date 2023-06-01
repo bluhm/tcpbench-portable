@@ -773,6 +773,13 @@ server_init(struct addrinfo *aitop)
 			    &ptb->Tflag, sizeof(ptb->Tflag)))
 				err(1, "setsockopt IPV6_TCLASS");
 		}
+#ifndef __OpenBSD__
+		if (ai->ai_family == AF_INET6) {
+			if (setsockopt(sock, IPPROTO_IPV6, IPV6_V6ONLY,
+			    &on, sizeof(on)) == -1)
+				warn("ipv6 only");
+		}
+#endif
 		if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR,
 		    &on, sizeof(on)) == -1)
 			warn("reuse port");
