@@ -6,10 +6,11 @@ BINDIR?=	/usr/local/bin
 MANDIR?=	/usr/local/man/man
 
 VERSION=	2.01
-CLEANFILES=	tcpbench-${VERSION}.tar.gz
+CLEANFILES=	tcpbench-${VERSION}.tar.gz*
 
 .PHONY: dist tcpbench-${VERSION}.tar.gz
 dist: tcpbench-${VERSION}.tar.gz
+	gpg --armor --detach-sign tcpbench-${VERSION}.tar.gz
 	@echo ${.OBJDIR}/tcpbench-${VERSION}.tar.gz
 
 tcpbench-${VERSION}.tar.gz:
