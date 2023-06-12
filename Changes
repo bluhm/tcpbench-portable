@@ -1,5 +1,7 @@
 Revision history for port from OpenBSD tcpbench to GNU/Linux.
 
+2.02
+
 2.01 2023-06-12
   * Provide gpg signature for release tar ball.
   * Disable IPv6 mapped address to avoid "Address already in use"
