@@ -1,5 +1,7 @@
 Revision history for port from OpenBSD tcpbench to GNU/Linux.
 
+2.03
+
 2.02 2024-03-22
   * Use pkgconf to build on GNU/Linux.
   * Update to OpenBSD tcpbench.c revision 1.70.
