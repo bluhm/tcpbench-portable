@@ -20,7 +20,9 @@
 #include <sys/types.h>
 #include <sys/time.h>
 #include <sys/socket.h>
+#ifdef __OpenBSD__
 #include <sys/socketvar.h>
+#endif
 #include <sys/resource.h>
 #include <sys/queue.h>
 #include <sys/un.h>
