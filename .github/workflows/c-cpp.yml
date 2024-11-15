@@ -13,7 +13,7 @@ jobs:
 
     steps:
     - name: Install packages
-      run: sudo apt-get -y install libbsd-dev libevent-dev pkgconf
+      run: sudo apt-get -y install libbsd-dev libevent-dev libtls-dev pkgconf
     - name: Checkout sources
       uses: actions/checkout@v4
     - name: Make build

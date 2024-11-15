@@ -1,7 +1,7 @@
 PROG=		tcpbench
 WARNINGS=	yes
-LDADD=		-lm -levent
-DPADD=		${LIBM} ${LIBEVENT}
+LDADD=		-lm -levent -ltls -lcrypto
+DPADD=		${LIBM} ${LIBEVENT} ${LIBTLS} ${LIBCRYPTO}
 BINDIR?=	/usr/local/bin
 MANDIR?=	/usr/local/man/man
 
