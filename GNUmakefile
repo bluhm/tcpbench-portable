@@ -1,7 +1,9 @@
-CFLAGS+=	-D_DEFAULT_SOURCE -D_GNU_SOURCE -Wall \
-		$(shell pkgconf --cflags libbsd-overlay)
-LDFLAGS+=	-levent -lm \
-		$(shell pkgconf --libs libbsd-overlay)
+CFLAGS+=	-D_DEFAULT_SOURCE -D_GNU_SOURCE -Wall -I. \
+		$(shell pkgconf --cflags libbsd-overlay) \
+		$(shell pkgconf --cflags libtls)
+LDFLAGS+=	-levent -lm -ltls -lcrypto \
+		$(shell pkgconf --libs libbsd-overlay) \
+		$(shell pkgconf --libs libtls)
 BINDIR?=        /usr/local/bin
 MANDIR?=        /usr/local/man/man
 
