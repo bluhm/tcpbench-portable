@@ -14,14 +14,14 @@ tcpbench: tcpbench.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) $< $(LDFLAGS) -o $@
 
 clean:
-	rm -f tcpbench tcpbench.o out
+	rm -f tcpbench tcpbench.o out *.crt *.key *.req *.srl
 
 install:
 	install -c -m 555 -s tcpbench -D -t ${DESTDIR}${BINDIR}
 	install -c -m 444 tcpbench.1 -D -t ${DESTDIR}${MANDIR}1
 
-.PHONY: test test-localhost test-localhost6
-test: test-localhost test-localhost6
+.PHONY: test test-localhost test-localhost6 test-tls
+test: test-localhost test-localhost6 test-tls
 
 test-localhost:
 	@echo -e '\n==== $@ ===='
@@ -40,3 +40,29 @@ test-localhost6:
 	    ./tcpbench -t2 ::1 || exit 1; \
 	    true
 	grep '^Conn:' out
+
+test-tls: server.crt
+	@echo '\n==== $@ ===='
+	./tcpbench -c -C server.crt -K server.key -s -4 >out & \
+	    trap "kill -TERM $$!" EXIT; \
+	    sleep 1; \
+	    ./tcpbench -c -t2 127.0.0.1 || exit 1; \
+	    true
+	grep '^Conn:' out
+
+ca.crt:
+	openssl req -batch -new \
+	    -subj /L=OpenBSD/O=tcpbench-regress/OU=ca/CN=root/ \
+	    -nodes -newkey rsa -keyout ca.key -x509 \
+	    -out ca.crt
+
+server.req:
+	openssl req -batch -new \
+	    -subj /L=OpenBSD/O=tcpbench-regress/OU=server/CN=localhost/ \
+	    -nodes -newkey rsa -keyout server.key \
+	    -out server.req
+
+server.crt: ca.crt server.req
+	openssl x509 -CAcreateserial -CAkey ca.key -CA ca.crt \
+	    -req -in server.req \
+	    -out server.crt
