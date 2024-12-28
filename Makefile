@@ -22,10 +22,10 @@ tcpbench-${VERSION}.tar.gz:
 	tar -czvf $@ tcpbench-${VERSION}
 	rm -rf tcpbench-${VERSION}
 
-CLEANFILES+=	out
+CLEANFILES+=	out *.crt *.key *.req *.srl
 
-.PHONY: test test-localhost test-localhost6
-test: test-localhost test-localhost6
+.PHONY: test test-localhost test-localhost6 test-tls
+test: test-localhost test-localhost6 test-tls
 
 test-localhost:
 	@echo '\n==== $@ ===='
@@ -44,5 +44,31 @@ test-localhost6:
 	    ./tcpbench -t2 ::1 || exit 1; \
 	    true
 	grep '^Conn:' out
+
+test-tls: server.crt
+	@echo '\n==== $@ ===='
+	./tcpbench -c -C server.crt -K server.key -s -4 >out & \
+	    trap "kill -TERM $$!" EXIT; \
+	    sleep 1; \
+	    ./tcpbench -c -t2 127.0.0.1 || exit 1; \
+	    true
+	grep '^Conn:' out
+
+ca.crt:
+	openssl req -batch -new \
+	    -subj /L=OpenBSD/O=tcpbench-regress/OU=ca/CN=root/ \
+	    -nodes -newkey rsa -keyout ca.key -x509 \
+	    -out ca.crt
+
+server.req:
+	openssl req -batch -new \
+	    -subj /L=OpenBSD/O=tcpbench-regress/OU=server/CN=localhost/ \
+	    -nodes -newkey rsa -keyout server.key \
+	    -out server.req
+
+server.crt: ca.crt server.req
+	openssl x509 -CAcreateserial -CAkey ca.key -CA ca.crt \
+	    -req -in server.req \
+	    -out server.crt
 
 .include <bsd.prog.mk>
