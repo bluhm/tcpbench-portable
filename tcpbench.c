@@ -1288,12 +1288,13 @@ main(int argc, char **argv)
 		case 'U':
 			ptb->Uflag = 1;
 			break;
-#ifdef __OpenBSD__
 		case 'T':
 			if (process_tls_opt(optarg))
 				break;
+#ifdef __OpenBSD__
 			if (map_tos(optarg, &ptb->Tflag))
 				break;
+#endif
 			errstr = NULL;
 			if (strlen(optarg) > 1 && optarg[0] == '0' &&
 			    optarg[1] == 'x')
@@ -1304,7 +1305,6 @@ main(int argc, char **argv)
 			if (ptb->Tflag == -1 || ptb->Tflag > 255 || errstr)
 				errx(1, "illegal tos value %s", optarg);
 			break;
-#endif
 		case 't':
 			secs = strtonum(optarg, 1, UINT_MAX, &errstr);
 			if (errstr != NULL)
