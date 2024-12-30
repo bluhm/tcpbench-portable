@@ -1,6 +1,9 @@
 Revision history for port from OpenBSD tcpbench to GNU/Linux.
 
-2.03
+2.03 2024-12-30
+  * Do not include sys/socketvar.h on Linux.
+  * Update to OpenBSD tcpbench.c revision 1.72.
+  * Add TLS test for OpenBSD and GNU/Linux.
 
 2.02 2024-03-22
   * Use pkgconf to build on GNU/Linux.
