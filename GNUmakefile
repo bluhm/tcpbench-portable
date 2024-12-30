@@ -1,4 +1,4 @@
-CFLAGS+=	-D_DEFAULT_SOURCE -D_GNU_SOURCE -Wall -I. \
+CFLAGS+=	-D_DEFAULT_SOURCE -D_GNU_SOURCE -Wall \
 		$(shell pkgconf --cflags libbsd-overlay) \
 		$(shell pkgconf --cflags libtls)
 LDFLAGS+=	-levent -lm -ltls -lcrypto \
