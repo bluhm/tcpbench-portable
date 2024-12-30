@@ -5,7 +5,7 @@ DPADD=		${LIBM} ${LIBEVENT} ${LIBTLS} ${LIBCRYPTO}
 BINDIR?=	/usr/local/bin
 MANDIR?=	/usr/local/man/man
 
-VERSION=	2.03
+VERSION=	3.00
 CLEANFILES=	tcpbench-${VERSION}.tar.gz*
 
 .PHONY: dist tcpbench-${VERSION}.tar.gz
