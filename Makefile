@@ -24,8 +24,8 @@ tcpbench-${VERSION}.tar.gz:
 
 CLEANFILES+=	out *.crt *.key *.req *.srl
 
-.PHONY: test test-localhost test-localhost6 test-tls
-test: test-localhost test-localhost6 test-tls
+.PHONY: test test-localhost test-localhost6 test-tls test-ciphers
+test: test-localhost test-localhost6 test-tls test-ciphers
 
 test-localhost:
 	@echo '\n==== $@ ===='
@@ -51,6 +51,17 @@ test-tls: server.crt
 	    trap "kill -TERM $$!" EXIT; \
 	    sleep 1; \
 	    ./tcpbench -c -t2 127.0.0.1 || exit 1; \
+	    true
+	grep '^Conn:' out
+
+test-ciphers: server.crt
+	@echo '\n==== $@ ===='
+	./tcpbench -T ciphers=AES128-GCM-SHA256 \
+	    -c -C server.crt -K server.key -s -4 >out & \
+	    trap "kill -TERM $$!" EXIT; \
+	    sleep 1; \
+	    ./tcpbench -T ciphers=AES128-GCM-SHA256 \
+	    -c -t2 127.0.0.1 || exit 1; \
 	    true
 	grep '^Conn:' out
 

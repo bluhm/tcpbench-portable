@@ -20,8 +20,8 @@ install:
 	install -c -m 555 -s tcpbench -D -t ${DESTDIR}${BINDIR}
 	install -c -m 444 tcpbench.1 -D -t ${DESTDIR}${MANDIR}1
 
-.PHONY: test test-localhost test-localhost6 test-tls
-test: test-localhost test-localhost6 test-tls
+.PHONY: test test-localhost test-localhost6 test-tls test-ciphers
+test: test-localhost test-localhost6 test-tls test-ciphers
 
 test-localhost:
 	@echo -e '\n==== $@ ===='
@@ -47,6 +47,17 @@ test-tls: server.crt
 	    trap "kill -TERM $$!" EXIT; \
 	    sleep 1; \
 	    ./tcpbench -c -t2 127.0.0.1 || exit 1; \
+	    true
+	grep '^Conn:' out
+
+test-ciphers: server.crt
+	@echo '\n==== $@ ===='
+	./tcpbench -T ciphers=AES128-GCM-SHA256 \
+	    -c -C server.crt -K server.key -s -4 >out & \
+	    trap "kill -TERM $$!" EXIT; \
+	    sleep 1; \
+	    ./tcpbench -T ciphers=AES128-GCM-SHA256 \
+	    -c -t2 127.0.0.1 || exit 1; \
 	    true
 	grep '^Conn:' out
 
