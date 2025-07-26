@@ -21,6 +21,7 @@ install:
 	install -c -m 444 tcpbench.1 -D -t ${DESTDIR}${MANDIR}1
 
 .PHONY: test test-localhost test-localhost6 test-tls test-ciphers
+.NOTPARALLEL: test test-localhost test-localhost6 test-tls test-ciphers
 test: test-localhost test-localhost6 test-tls test-ciphers
 
 test-localhost:
