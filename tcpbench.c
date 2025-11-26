@@ -1,4 +1,4 @@
-/*	$OpenBSD: tcpbench.c,v 1.73 2024/12/30 21:19:29 bluhm Exp $	*/
+/*	$OpenBSD: tcpbench.c,v 1.74 2025/11/26 07:27:13 dlg Exp $	*/
 
 /*
  * Copyright (c) 2008 Damien Miller <djm@mindrot.org>
@@ -1278,7 +1278,7 @@ main(int argc, char **argv)
 			break;
 #endif
 		case 'n':
-			nconn = strtonum(optarg, 0, 65535, &errstr);
+			nconn = strtonum(optarg, 1, 65535, &errstr);
 			if (errstr != NULL)
 				errx(1, "number of connections is %s: %s",
 				    errstr, optarg);
