@@ -1,5 +1,7 @@
 Revision history for port from OpenBSD tcpbench to GNU/Linux.
 
+3.02
+
 3.01 2026-02-11
   * Allow to select DSCP_VA for network ToS.
   * Raise the min number of connections to 1.
