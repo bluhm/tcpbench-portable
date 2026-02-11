@@ -1,6 +1,9 @@
 Revision history for port from OpenBSD tcpbench to GNU/Linux.
 
-3.01
+3.01 2026-02-11
+  * Allow to select DSCP_VA for network ToS.
+  * Raise the min number of connections to 1.
+  * Reformat tcpbench(1) usage to fit into 80 columns.
 
 3.00 2024-12-30
   * Do not include sys/socketvar.h on Linux.
