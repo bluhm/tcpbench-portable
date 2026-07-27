@@ -20,26 +20,13 @@
 #include <sys/types.h>
 #include <sys/time.h>
 #include <sys/socket.h>
-#ifdef __OpenBSD__
-#include <sys/socketvar.h>
-#endif
 #include <sys/resource.h>
 #include <sys/queue.h>
 #include <sys/un.h>
 
-#include <net/route.h>
-
 #include <netinet/in.h>
 #include <netinet/ip.h>
 #include <netinet/tcp.h>
-#ifdef __OpenBSD__
-#include <netinet/tcp_timer.h>
-#include <netinet/tcp_fsm.h>
-#include <netinet/in_pcb.h>
-#include <netinet/tcp_var.h>
-#endif
-
-#include <arpa/inet.h>
 
 #include <unistd.h>
 #include <limits.h>
@@ -59,14 +46,8 @@
 #include <err.h>
 #include <fcntl.h>
 #include <poll.h>
-#include <paths.h>
 #include <math.h>
 #include <tls.h>
-
-#include <openssl/evp.h>
-#include <openssl/rsa.h>
-#include <openssl/pem.h>
-#include <openssl/x509.h>
 
 #define DEFAULT_PORT "12345"
 #define DEFAULT_STATS_INTERVAL 1000 /* ms */
