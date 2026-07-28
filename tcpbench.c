@@ -1,4 +1,4 @@
-/*	$OpenBSD: tcpbench.c,v 1.76 2025/12/06 09:48:30 phessler Exp $	*/
+/*	$OpenBSD: tcpbench.c,v 1.77 2026/07/28 08:26:51 jsg Exp $	*/
 
 /*
  * Copyright (c) 2008 Damien Miller <djm@mindrot.org>
