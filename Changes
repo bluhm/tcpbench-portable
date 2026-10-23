@@ -1,6 +1,8 @@
 Revision history for port from OpenBSD tcpbench to GNU/Linux.
 
-3.03
+3.03 2026-10-23
+  * Update to OpenBSD tcpbench.c revision 1.80.
+  * Switch GNU build from pkgconf to pkg-config.
 
 3.02 2026-09-04
   * Remove unneeded includes.
