@@ -1,9 +1,9 @@
 CFLAGS+=	-D_DEFAULT_SOURCE -D_GNU_SOURCE -Wall \
-		$(shell pkgconf --cflags libbsd-overlay) \
-		$(shell pkgconf --cflags libtls libssl libcrypto)
+		$(shell pkg-config --cflags libbsd-overlay) \
+		$(shell pkg-config --cflags libtls libssl libcrypto)
 LDFLAGS+=	-levent -lm \
-		$(shell pkgconf --libs libbsd-overlay) \
-		$(shell pkgconf --libs libtls libssl libcrypto)
+		$(shell pkg-config --libs libbsd-overlay) \
+		$(shell pkg-config --libs libtls libssl libcrypto)
 BINDIR?=        /usr/local/bin
 MANDIR?=        /usr/local/man/man
 
